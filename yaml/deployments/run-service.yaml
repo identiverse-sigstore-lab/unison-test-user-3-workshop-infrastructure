@@ -1,0 +1,38 @@
+---
+metadata:
+  name: "run-service"
+  namespace: "user-ns-unison-test-user-3"
+  labels:
+    app: "run-service"
+apiVersion: "apps/v1"
+kind: "Deployment"
+spec:
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: "run-service"
+    spec:
+      dnsPolicy: "ClusterFirst"
+      terminationGracePeriodSeconds: 30
+      containers:
+      - image: "public.ecr.aws/o6u7e2l7/pause:signed"
+        imagePullPolicy: "Always"
+        terminationMessagePolicy: "File"
+        terminationMessagePath: "/dev/termination-log"
+        name: "pause"
+        resources: {}
+      securityContext: {}
+      restartPolicy: "Always"
+      schedulerName: "default-scheduler"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "run-service"
+  revisionHistoryLimit: 10
+  strategy:
+    type: "RollingUpdate"
+    rollingUpdate:
+      maxSurge: "25%"
+      maxUnavailable: "25%"
+  progressDeadlineSeconds: 600
